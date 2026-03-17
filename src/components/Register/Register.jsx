@@ -3,12 +3,15 @@ import {
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
-import React from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { ToastContainer, toast } from "react-toastify";
 import auth from "../firebase/firebase.config";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
+  // state or showing password
+  const [showPassword, setShowPassword] = useState(false);
   const handleRegister = (e) => {
     e.preventDefault();
     //   pick value from input field starts
@@ -118,14 +121,24 @@ const Register = () => {
           <label htmlFor="password" className="block mb-1 font-medium">
             Password
           </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Enter your password"
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            required
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              id="password"
+              placeholder="Enter your password"
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              required
+            />
+
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute p-2 text-xl text-gray-600 border-none cursor-pointer right-3 top-1 bg-none"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
         </div>
 
         {/* Checkbox */}

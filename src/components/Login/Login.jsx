@@ -40,6 +40,7 @@ const Login = () => {
           return;
         }
 
+        e.target.reset("");
         toast.success("login successfully");
         console.log(user);
       })
