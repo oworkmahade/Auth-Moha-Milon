@@ -6,6 +6,7 @@ import React, { useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { ToastContainer, toast } from "react-toastify";
 import auth from "../firebase/firebase.config";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   // state for holding email from input field using useRef
@@ -139,12 +140,17 @@ const Login = () => {
         {/* Login Link */}
         <p className="text-sm text-center">
           Register if you don't have an account.{" "}
-          <a
+          {/* <a
             className="text-blue-500 cursor-pointer hover:underline"
             href="/register"
           >
             Register
-          </a>
+          </a> */}
+          <span className="text-blue-500 cursor-pointer hover:underline">
+            <Link to="/register">
+              <button type="button"> Register</button>
+            </Link>
+          </span>
         </p>
 
         <ToastContainer

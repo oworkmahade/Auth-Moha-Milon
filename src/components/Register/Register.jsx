@@ -8,6 +8,7 @@ import { Helmet } from "react-helmet-async";
 import { ToastContainer, toast } from "react-toastify";
 import auth from "../firebase/firebase.config";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   // state or showing password
@@ -163,12 +164,11 @@ const Register = () => {
         {/* Login Link */}
         <p className="text-sm text-center">
           Already have an account?{" "}
-          <a
-            className="text-blue-500 cursor-pointer hover:underline"
-            href="/login"
-          >
-            Login
-          </a>
+          <span className="text-blue-500 cursor-pointer hover:underline">
+            <Link to="/login">
+              <button type="button"> Login </button>
+            </Link>
+          </span>
         </p>
 
         <ToastContainer
