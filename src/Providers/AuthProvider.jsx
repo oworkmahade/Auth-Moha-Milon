@@ -19,11 +19,13 @@ const AuthProvider = ({ children }) => {
 
   //  state declaration
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   //  Registration part
   // it will return createUserWithEmailAndPassword  with three parameter named auth, email, password. auth will get and will pass email and password as parameter
 
   const createUser = (email, password) => {
+    setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
@@ -31,6 +33,7 @@ const AuthProvider = ({ children }) => {
   // it will return signInWithEmailAndPassword  with three parameter named auth, email, password. auth will get and will pass email and password as parameter
 
   const signInUser = (email, password) => {
+    setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
@@ -43,6 +46,7 @@ const AuthProvider = ({ children }) => {
         "observing current user inside useEffect of AuthProvider",
         currentUser,
       );
+      setLoading(false); // ✅ very important
     });
 
     return () => {
@@ -54,6 +58,7 @@ const AuthProvider = ({ children }) => {
   // we will declare function named logOut because if signOut it will clash with firebase signOut
 
   const logOut = () => {
+    setLoading(true);
     return signOut(auth);
   };
 
@@ -63,6 +68,7 @@ const AuthProvider = ({ children }) => {
     createUser,
     signInUser,
     logOut,
+    loading,
   };
 
   return (

@@ -9,6 +9,8 @@ import Register from "./components/Register/Register";
 import { HelmetProvider } from "react-helmet-async";
 import ErrorPage from "./components/ErrorPage/ErrorPage";
 import AuthProvider from "./Providers/AuthProvider";
+import Orders from "./components/Orders/Orders";
+import PrivateRoutes from "./routes/PrivateRoutes";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,15 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register></Register>,
+      },
+      {
+        path: "/orders",
+        element: (
+          <PrivateRoutes>
+            <Orders></Orders>
+          </PrivateRoutes>
+          //it first hit PrivateRoutes and check whether user exists or not if exist then allow children(Orders) otherwise go to login
+        ),
       },
     ],
   },

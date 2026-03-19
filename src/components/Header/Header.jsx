@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../Providers/AuthProvider";
+import { Link } from "react-router-dom";
 
 const activeClass = ({ isActive }) =>
   isActive ? "text-green-600 border-2 border-green-600 p-1" : "text-gray-600";
@@ -29,6 +30,11 @@ const Header = () => {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/orders" className={activeClass}>
+              Orders
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/login" className={activeClass}>
               login
             </NavLink>
@@ -41,10 +47,18 @@ const Header = () => {
         </ul>
       </div>
       <div className="navbar-end">
-        {user && <span>{user.email}</span>}
-        <a onClick={handleLogOut} className="btn btn-sm">
-          Sign Out
-        </a>
+        {user ? (
+          <>
+            <span>{user.email}</span>
+            <button onClick={handleLogOut} className="btn btn-sm">
+              Sign Out
+            </button>
+          </>
+        ) : (
+          <Link to="/login">
+            <button className="btn btn-sm">Login</button>
+          </Link>
+        )}
       </div>
     </div>
   );
