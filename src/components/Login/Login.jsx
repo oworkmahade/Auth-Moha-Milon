@@ -1,7 +1,7 @@
 import React, { useContext, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Providers/AuthProvider";
 
 const Login = () => {
@@ -11,8 +11,14 @@ const Login = () => {
   //  receive signInUser by destructuring
   const { signInUser } = authInfo;
 
+  // receive signInWithGoogle
+  const { signInWithGoogle } = authInfo;
+
   // state for holding email from input field using useRef
   const emailRef = useRef(null);
+
+  // navigate hook
+  const navigate = useNavigate();
 
   // form handle login
   const handleLogin = (e) => {
@@ -25,6 +31,8 @@ const Login = () => {
       .then((result) => {
         console.log(result.user);
         console.log("User login successful");
+        e.target.reset("");
+        navigate("/");
       })
       .catch((error) => {
         console.log(error.message);
@@ -32,8 +40,19 @@ const Login = () => {
     // note: since this are promise so that we must write then and catch
   };
 
+  // signInWithGoogle
+  const handleGoogleSignIn = () => {
+    signInWithGoogle()
+      .then((result) => {
+        console.log(result.user);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
   return (
-    <div className="my-4">
+    <div className="my-4 ">
       <Helmet>
         <title>Login</title>
       </Helmet>
@@ -91,17 +110,25 @@ const Login = () => {
         >
           Login
         </button>
-
-        {/* Login Link */}
-        <p className="text-sm text-center">
-          Register if you don't have an account.{" "}
-          <span className="text-blue-500 cursor-pointer hover:underline">
-            <Link to="/register">
-              <button type="button"> Register</button>
-            </Link>
-          </span>
-        </p>
       </form>
+      {/* Login Link */}
+      <p className="mt-4 text-sm text-center">
+        Register if you don't have an account.{" "}
+        <span className="text-blue-500 cursor-pointer hover:underline">
+          <Link to="/register">
+            <button type="button"> Register</button>
+          </Link>
+        </span>
+      </p>
+
+      <div className="flex flex-row items-center justify-center mt-4">
+        <input
+          onClick={handleGoogleSignIn}
+          type="submit"
+          value="Google Login"
+          className="btn"
+        />
+      </div>
     </div>
   );
 };

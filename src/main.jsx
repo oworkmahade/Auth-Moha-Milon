@@ -11,6 +11,8 @@ import ErrorPage from "./components/ErrorPage/ErrorPage";
 import AuthProvider from "./Providers/AuthProvider";
 import Orders from "./components/Orders/Orders";
 import PrivateRoutes from "./routes/PrivateRoutes";
+import Profile from "./components/Profile/Profile";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +39,24 @@ const router = createBrowserRouter([
             <Orders></Orders>
           </PrivateRoutes>
           //it first hit PrivateRoutes and check whether user exists or not if exist then allow children(Orders) otherwise go to login
+        ),
+      },
+
+      {
+        path: "/profile",
+        element: (
+          <PrivateRoutes>
+            <Profile></Profile>
+          </PrivateRoutes>
+        ),
+      },
+
+      {
+        path: "/dashboard",
+        element: (
+          <PrivateRoutes>
+            <Dashboard></Dashboard>
+          </PrivateRoutes>
         ),
       },
     ],
