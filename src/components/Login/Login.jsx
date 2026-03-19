@@ -1,81 +1,36 @@
-import {
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { Helmet } from "react-helmet-async";
-import { ToastContainer, toast } from "react-toastify";
-import auth from "../firebase/firebase.config";
+
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../Providers/AuthProvider";
 
 const Login = () => {
+  // receiving object from AuthContext
+  const authInfo = useContext(AuthContext);
+
+  //  receive signInUser by destructuring
+  const { signInUser } = authInfo;
+
   // state for holding email from input field using useRef
   const emailRef = useRef(null);
+
+  // form handle login
   const handleLogin = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    //   password validation starts here
-    const passwordRegex =
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
-    if (!passwordRegex.test(password)) {
-      toast.error(
-        "Password must have uppercase, lowercase, digit, special char, and 6+ chars",
-      );
-      return;
-    }
-    //   password validation ends here
-
-    // User login/signIn using  firebase starts here
-    // https://firebase.google.com/docs/auth/web/password-auth
-    // Web > Password Authentication > Sign in a user with an email address and password
-
-    signInWithEmailAndPassword(auth, email, password)
+    // sign in user in firebase
+    signInUser(email, password)
       .then((result) => {
-        const user = result.user;
-
-        // email verification check at times of sign In
-        if (!user.emailVerified) {
-          toast.error("Verified email first");
-          return;
-        }
-
-        e.target.reset("");
-        toast.success("login successfully");
-        console.log(user);
+        console.log(result.user);
+        console.log("User login successful");
       })
       .catch((error) => {
-        toast.error(error.message);
+        console.log(error.message);
       });
-
-    // User login/signIn using  firebase ends here
+    // note: since this are promise so that we must write then and catch
   };
-
-  // password reset start here
-  //   Since form onSubmit is not working, we need to get the email from the input field and validate it manually.”
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const handlePasswordReset = () => {
-    const email = emailRef.current.value; // catch email
-
-    // email validation
-    if (!email) {
-      toast.error("Please enter an email address");
-      return;
-    } else if (!emailRegex.test(email)) {
-      toast.error("Please enter a valid email address");
-      return;
-    }
-
-    // password reset email using firebase
-    // https://firebase.google.com/docs/auth/web/manage-users
-    // Web > Manage Users > Send a password reset email
-
-    sendPasswordResetEmail(auth, email)
-      .then(() => toast.success("Password reset email sent!"))
-      .catch((error) => toast.error(error.message));
-  };
-  // password reset ends here
 
   return (
     <div className="my-4">
@@ -118,7 +73,7 @@ const Login = () => {
         </div>
 
         {/* password reset */}
-        <div className="my-4">
+        {/* <div className="my-4">
           <button
             type="button"
             onClick={handlePasswordReset}
@@ -127,7 +82,7 @@ const Login = () => {
           >
             Forgot password?
           </button>
-        </div>
+        </div> */}
 
         {/* Submit Button */}
         <button
@@ -140,28 +95,12 @@ const Login = () => {
         {/* Login Link */}
         <p className="text-sm text-center">
           Register if you don't have an account.{" "}
-          {/* <a
-            className="text-blue-500 cursor-pointer hover:underline"
-            href="/register"
-          >
-            Register
-          </a> */}
           <span className="text-blue-500 cursor-pointer hover:underline">
             <Link to="/register">
               <button type="button"> Register</button>
             </Link>
           </span>
         </p>
-
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          closeOnClick
-          pauseOnHover
-          draggable
-          theme="colored"
-        />
       </form>
     </div>
   );

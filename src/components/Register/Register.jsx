@@ -1,18 +1,18 @@
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  updateProfile,
-} from "firebase/auth";
-import React, { useState } from "react";
+import { useContext, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { ToastContainer, toast } from "react-toastify";
-import auth from "../firebase/firebase.config";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../Providers/AuthProvider";
 
 const Register = () => {
+  // receiving object from AuthContext
+  const authInfo = useContext(AuthContext);
+
+  // receive createUser by destructuring
+  const { createUser } = authInfo;
+
   // state or showing password
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(null);
   const handleRegister = (e) => {
     e.preventDefault();
     //   pick value from input field starts
@@ -20,62 +20,18 @@ const Register = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     const termsChecked = e.target.terms.checked;
-    //   pick value from input field ends
+    console.log(name, email, password, termsChecked);
 
-    //  email validation no need because it automatically validates since input field type is email
-
-    //   password validation starts here
-    const passwordRegex =
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
-    if (!passwordRegex.test(password)) {
-      toast.error(
-        "Password must have uppercase, lowercase, digit, special char, and 6+ chars",
-      );
-      return;
-    }
-    //   password validation ends here
-
-    // checkbox validation start here
-    if (!termsChecked) {
-      toast.error("Please agree to the terms and conditions.");
-      return;
-    }
-    //  checkbox validation ends here
-
-    /***User Creation using firebase ***/
-    // https://firebase.google.com/docs/auth/web/password-auth
-    // Web > Password Authentication > Create a password-based account
-
-    createUserWithEmailAndPassword(auth, email, password)
+    // create user in firebase
+    createUser(email, password)
       .then((result) => {
-        const user = result.user;
-        e.target.reset("");
-        toast.success("User created successfully");
-        console.log(user);
-
-        // update profile at this time starts here
-        // https://firebase.google.com/docs/auth/web/manage-users
-        // Web > Manage Users > Update a user's profile
-        updateProfile(user, {
-          displayName: name,
-          photoURL: "https://i.ibb.co.com/LdhPKfrb/main-image-hasan.jpg",
-        })
-          .then(() => toast.success("Profile Updated"))
-          .catch((error) => toast.error(error.message));
-
-        // update profile at this time ends here
-
-        // send Verification email  at this time starts
-        sendEmailVerification(user)
-          .then(() => toast.success("Email verification sent!"))
-          .catch((error) => toast.error(error.message));
-        // send Verification email  at this time ends
+        console.log(result.user);
       })
       .catch((error) => {
-        toast.error(error.message);
+        console.log(error);
       });
 
-    console.log(name, email, password, termsChecked);
+    // note: since this are promise so that we must write then and catch
   };
 
   return (
@@ -170,16 +126,6 @@ const Register = () => {
             </Link>
           </span>
         </p>
-
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          closeOnClick
-          pauseOnHover
-          draggable
-          theme="colored"
-        />
       </form>
     </div>
   );

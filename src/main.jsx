@@ -35,6 +35,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <HelmetProvider>
+      {/* wrap the app with Provider  */}
       <AuthProvider>
         <RouterProvider router={router} />
       </AuthProvider>
